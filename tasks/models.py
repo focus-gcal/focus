@@ -1,10 +1,14 @@
 from django.db import models
 
+from focus_gcal import settings
 import schedules
 import schedules.models
+
 # Create your models here.
 
 class Task(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="tasks")
+
     STATUS_CHOICES = [
         ("todo", "To Do"),
         ("in_progress", "In Progress"),
