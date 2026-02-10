@@ -1,11 +1,16 @@
 from django.db import models
-from focus_gcal.enums import StatusChoices
-
 from focus_gcal import settings
 import schedules
 import schedules.models
 
 # Create your models here.
+class StatusChoices(models.TextChoices):
+    TODO = "todo", "To Do"
+    IN_PROGRESS = "in_progress", "In Progress"
+    COMPLETED = "completed", "Completed"
+    BLOCKED = "blocked", "Blocked"
+    
+    
 
 class Task(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="tasks")

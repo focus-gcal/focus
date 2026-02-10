@@ -1,7 +1,16 @@
 from django.db import models
 from django.conf import settings
 from django.core.exceptions import ValidationError
-from focus_gcal.enums import DayOfWeek
+
+
+class DayOfWeek(models.IntegerChoices):
+    MONDAY = 0, "Mon"
+    TUESDAY = 1, "Tue"
+    WEDNESDAY = 2, "Wed"
+    THURSDAY = 3, "Thu"
+    FRIDAY = 4, "Fri"
+    SATURDAY = 5, "Sat"
+    SUNDAY = 6, "Sun"
 
 class Schedule(models.Model):
     user = models.ForeignKey(
