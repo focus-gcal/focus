@@ -9,12 +9,13 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
+        ("tasks", "0001_initial"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.CreateModel(
-            name="Schedule",
+            name="TimeSlots",
             fields=[
                 (
                     "id",
@@ -25,28 +26,23 @@ class Migration(migrations.Migration):
                         verbose_name="ID",
                     ),
                 ),
-                ("name", models.CharField(max_length=100)),
+                ("start_time", models.DateTimeField()),
+                ("end_time", models.DateTimeField()),
                 (
-                    "day_of_week",
-                    models.PositiveSmallIntegerField(
-                        choices=[
-                            (0, "Mon"),
-                            (1, "Tue"),
-                            (2, "Wed"),
-                            (3, "Thu"),
-                            (4, "Fri"),
-                            (5, "Sat"),
-                            (6, "Sun"),
-                        ]
+                    "task",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="blocks",
+                        to="tasks.task",
                     ),
                 ),
-                ("start_time", models.TimeField()),
-                ("end_time", models.TimeField()),
                 (
                     "user",
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
-                        related_name="schedules",
+                        related_name="blocks",
                         to=settings.AUTH_USER_MODEL,
                     ),
                 ),
