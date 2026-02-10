@@ -6,11 +6,17 @@ from focus_gcal import settings
 
 
 # Create your models here.
-class StatusChoices(models.TextChoices):
+class TaskStatus(models.TextChoices):
     TODO = "todo", "To Do"
     IN_PROGRESS = "in_progress", "In Progress"
     COMPLETED = "completed", "Completed"
     BLOCKED = "blocked", "Blocked"
+
+
+class TaskPriority(models.IntegerChoices):
+    LOW = 1, "Low"
+    MEDIUM = 2, "Medium"
+    HIGH = 3, "High"
 
 
 class Task(models.Model):
@@ -21,14 +27,16 @@ class Task(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField(blank=True)
     duration = models.PositiveIntegerField()
-    priority = models.PositiveSmallIntegerField(default=3)
+    priority = models.PositiveSmallIntegerField(
+        choices=TaskPriority.choices, default=TaskPriority.LOW
+    )
     deadline = models.DateTimeField(null=True, blank=True)
     is_hard_deadline = models.BooleanField(default=False)
     status = models.CharField(
-        max_length=20, choices=StatusChoices.choices, default=StatusChoices.TODO
+        max_length=20, choices=TaskStatus.choices, default=TaskStatus.TODO
     )
-    stardates = models.DateTimeField(null=True, blank=True)
-    minchunk = models.PositiveIntegerField(default=3)
+    start_date = models.DateTimeField(null=True, blank=True)
+    min_chunk = models.PositiveIntegerField(null=True, blank=True)
     max_duration_chunk = models.PositiveIntegerField(null=True, blank=True)
     schedule = models.ForeignKey(
         schedules.models.Schedule,

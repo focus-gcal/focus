@@ -3,7 +3,7 @@ from django.core.exceptions import ValidationError
 from django.db import models
 
 
-class ScheduledBlock(models.Model):
+class TimeSlots(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="blocks"
     )
@@ -24,7 +24,7 @@ class ScheduledBlock(models.Model):
             raise ValidationError("end_time must be after start_time")
         if self.task and self.task.user_id != self.user_id:
             raise ValidationError("Block user must match task user")
-        qs = ScheduledBlock.objects.filter(user=self.user)
+        qs = TimeSlots.objects.filter(user=self.user)
 
         # When updating an existing block, exclude itself
         if self.pk:
@@ -38,9 +38,6 @@ class ScheduledBlock(models.Model):
         if overlaps.exists():
             raise ValidationError("This block overlaps with an existing block.")
 
-        if not self.task and not self.label:
-            raise ValidationError("Non-task blocks must have a label")
-
     def __str__(self):
-        name = self.task.title if self.task else self.label
+        name = self.task.title if self.task else "Unnamed Task"
         return f"{self.user.username}: {name} ({self.start_time} → {self.end_time})"
