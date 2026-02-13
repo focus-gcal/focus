@@ -1,5 +1,4 @@
 from api import router
-from ninja import Router
 
 from users.auth.ninja_auth import JWTAuth
 

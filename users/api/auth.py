@@ -6,8 +6,9 @@ from users.auth.jwt import create_access_token
 
 from ..schemas.auth import LoginIn, RegisterIn, RegisterOut, TokenOut
 
-
 User = get_user_model()
+
+
 @router.post("/login", response=TokenOut)
 def token(request, data: LoginIn):
     user = authenticate(request, username=data.username, password=data.password)
