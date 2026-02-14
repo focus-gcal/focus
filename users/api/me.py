@@ -1,9 +1,9 @@
-from api import router
-
 from users.auth.ninja_auth import JWTAuth
 
+from .api import router
 
-@router.get("", auth=JWTAuth())
+
+@router.get("me", auth=JWTAuth())
 def me(request):
     return {
         "id": request.auth.id,
