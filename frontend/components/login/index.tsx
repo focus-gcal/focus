@@ -1,30 +1,30 @@
-// components/login/index.tsx
+import { Button, ConfigProvider } from "antd"
+import logoUrl from "raw:~assets/logo.png"
+
 function Login() {
   return (
-    <div style={{ 
-      display: "flex", 
-      flexDirection: "column", 
-      alignItems: "center", 
-      justifyContent: "center",
-      minHeight: "100%",
-      padding: 24 
-    }}>
-      <img 
-        src="/assets/icon.png"   // or your logo path
-        alt="Logo" 
-        style={{ width: 80, height: 80, marginBottom: 32 }}
-      />
-      <button
-        onClick={() => { /* handle login */ }}
+    <ConfigProvider
+      theme={{
+        token: {
+          borderRadius: 8
+          // optional: customize colors
+        }
+      }}>
+      <div
         style={{
-          padding: "12px 24px",
-          fontSize: 14,
-          // your button styles
-        }}
-      >
-        Sign in
-      </button>
-    </div>
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          minHeight: "100%",
+          position: "relative",
+          top: 25
+        }}>
+        <img src={logoUrl} alt="Logo" style={{ width: 200, height: "auto" }} />
+        <Button type="primary" size="large" onClick={() => {}}>
+          Sign in
+        </Button>
+      </div>
+    </ConfigProvider>
   )
 }
 

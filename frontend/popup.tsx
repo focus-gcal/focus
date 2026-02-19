@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react"
 
 import { sendToBackground } from "@plasmohq/messaging"
-import { type User, AuthState } from "~types/user"
-import { Dashboard, Login } from "~components"
 
+import { Dashboard, Loading, Login } from "~components"
+import { AuthState, type User } from "~types/user"
+
+import "./popup.css"
 
 function IndexPopup() {
   const [authState, setAuthState] = useState<AuthState>(AuthState.LOADING)
@@ -23,16 +25,17 @@ function IndexPopup() {
   return (
     <div
       style={{
-        padding: 16,
+        padding: 20,
         minWidth: 320,
         minHeight: 500,
         width: 320,
-        height: 500
+        height: 500,
+        overflow: "hidden"
       }}>
-        {authState === AuthState.LOADING && <div>Loading...</div>}
-        {authState === AuthState.AUTHENTICATED && <Dashboard />}
-        {authState === AuthState.UNAUTHENTICATED && <Login />}
-      </div>
+      {authState === AuthState.LOADING && <Loading />}
+      {authState === AuthState.AUTHENTICATED && <Dashboard />}
+      {authState === AuthState.UNAUTHENTICATED && <Login />}
+    </div>
   )
 }
 
