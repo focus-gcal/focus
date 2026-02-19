@@ -1,5 +1,5 @@
 import Dashboard from "./dashboard"
-import Login from "./login"
 import Loading from "./Loading"
+import Login from "./login"
 
 export { Dashboard, Login, Loading }
