@@ -1,6 +1,7 @@
-import schedules
 import schedules.models
 from django.db import models
+
+import schedules
 from focus_gcal import settings
 
 
@@ -38,7 +39,7 @@ class Task(models.Model):
     min_chunk = models.PositiveIntegerField(null=True, blank=True)
     max_duration_chunk = models.PositiveIntegerField(null=True, blank=True)
     schedule = models.ForeignKey(
-        schedules.models.Schedule,
+        schedules.models.ScheduleTemplate,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
