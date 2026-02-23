@@ -10,6 +10,7 @@ const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
     if (user_auth.expiry_date && new Date(user_auth.expiry_date) > new Date()) {
       res.send({ valid: true })
     } else {
+      await storage.remove("user_auth")
       res.send({ valid: false })
     }
   } else {
