@@ -1,3 +1,4 @@
+from django.contrib.auth.hashers import make_password
 from django.db import transaction
 from users.auth.google import GoogleCredentials, GoogleUserInfo
 from users.models import User
@@ -16,7 +17,7 @@ class UserRepository:
                 google_sub=user_info.sub,
                 first_name=user_info.name,
                 refresh_token=credentials.refresh_token,
-                password=None,
+                password=make_password(None),
                 is_active=True,
                 is_staff=False,
                 is_superuser=False,
