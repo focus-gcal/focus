@@ -2,7 +2,9 @@ import { Button } from "antd"
 import { useState } from "react"
 
 import { sendToBackground } from "@plasmohq/messaging"
-import {Storage} from "@plasmohq/storage"
+import { Storage } from "@plasmohq/storage"
+
+import { useAuth } from "~context/auth"
 
 type SignInButtonProps = {
   style?: React.CSSProperties
@@ -35,6 +37,7 @@ function GoogleIcon() {
 
 export default function SignInButton({ style }: SignInButtonProps) {
   const [loading, setLoading] = useState(false)
+  const { refreshAuth } = useAuth()
 
   const handleClick = async () => {
     setLoading(true)
@@ -42,8 +45,7 @@ export default function SignInButton({ style }: SignInButtonProps) {
       await sendToBackground({ name: "signInGoogle" })
     } finally {
       setLoading(false)
-      storage.set("loggedIn", true)
-
+      refreshAuth()
     }
   }
   return (

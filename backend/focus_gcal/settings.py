@@ -40,6 +40,7 @@ CACHES = {
 # Application definition
 
 INSTALLED_APPS = [
+    "corsheaders",
     "time_slots.apps.TimeSlotsConfig",
     "users.apps.UsersConfig",
     "schedules.apps.SchedulesConfig",
@@ -54,12 +55,25 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+]
+
+CORS_ALLOWED_ORIGINS = [
+    "chrome-extension://ejkkilpcpkhfjgbdjllidincdcdpkkcf",
+]
+
+CORS_ALLOW_METHODS = ["GET", "POST", "OPTIONS"]
+
+CORS_ALLOW_HEADERS = [
+    "accept",
+    "content-type",
+    "authorization",
 ]
 
 ROOT_URLCONF = "focus_gcal.urls"

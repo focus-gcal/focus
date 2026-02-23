@@ -1,15 +1,24 @@
+import { useAuth } from "context/auth"
+
 import { Storage } from "@plasmohq/storage"
 
 const storage = new Storage({ area: "local" })
-import { useAuth } from "context/auth"
 
 function Dashboard() {
   const { refreshAuth } = useAuth()
-  return <div> ddd<button onClick={() => {
-    storage.set("loggedIn", false)
-    refreshAuth()
-  }}>Sign Out</button></div>
-
+  return (
+    <div>
+      {" "}
+      ddd
+      <button
+        onClick={() => {
+          storage.remove("user_auth")
+          refreshAuth()
+        }}>
+        Sign Out
+      </button>
+    </div>
+  )
 }
 
 export default Dashboard
