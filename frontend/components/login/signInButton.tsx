@@ -3,6 +3,7 @@ import { useState } from "react"
 
 import { sendToBackground } from "@plasmohq/messaging"
 import { Storage } from "@plasmohq/storage"
+
 import { useAuth } from "~context/auth"
 
 type SignInButtonProps = {

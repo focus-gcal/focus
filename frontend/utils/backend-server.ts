@@ -22,7 +22,7 @@ class BackendServer {
       body: JSON.stringify({ state: state }),
       headers: {
         "Content-Type": "application/json",
-        "Accept": "application/json"
+        Accept: "application/json"
       }
     })
     const data: StartOAuthResponse = await response.json().catch((error) => {
@@ -40,7 +40,7 @@ class BackendServer {
       body: JSON.stringify({ code: code, state: state }),
       headers: {
         "Content-Type": "application/json",
-        "Accept": "application/json"
+        Accept: "application/json"
       }
     })
     const data: CallbackOAuthResponse = await response.json().catch((error) => {
@@ -49,7 +49,7 @@ class BackendServer {
     if (!response.ok || !data.ok) {
       throw new Error(data.error || "Failed to callback OAuth")
     }
-    return {jwt_token: data.jwt_token, expiry_date: data.expiry_date}
+    return { jwt_token: data.jwt_token, expiry_date: data.expiry_date }
   }
 }
 

@@ -36,9 +36,11 @@ const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
     if (returned_state !== state) {
       throw new Error("State mismatch")
     }
-    const { jwt_token, expiry_date } = await BackendServer.callbackOAuth(code, state)
-    storage.set("user_auth", {token: jwt_token, expiry_date: expiry_date})
-
+    const { jwt_token, expiry_date } = await BackendServer.callbackOAuth(
+      code,
+      state
+    )
+    storage.set("user_auth", { token: jwt_token, expiry_date: expiry_date })
 
     res.send({ valid: true, isInProgress: false })
   } catch (error) {
