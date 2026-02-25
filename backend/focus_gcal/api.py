@@ -7,7 +7,9 @@ from users.api import api as users_api
 
 api = NinjaAPI()
 
+# /users/ and /auth/ both serve the same router (auth + me) so clients work either way
 api.add_router("/users/", users_api.router)
+api.add_router("/auth/", users_api.router)
 api.add_router("/schedules/", schedules_api.router)
 api.add_router("/time_slots/", time_slots_api.router)
 api.add_router("/tasks/", tasks_api.router)

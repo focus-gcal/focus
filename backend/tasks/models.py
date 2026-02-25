@@ -1,8 +1,6 @@
 import schedules.models
+from django.conf import settings
 from django.db import models
-
-import schedules
-from focus_gcal import settings
 
 
 # Create your models here.
