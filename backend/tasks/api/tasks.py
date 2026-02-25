@@ -9,8 +9,8 @@ from .schemas.tasks import TaskCreateIn, TaskOut, TaskUpdateIn
 router = Router()
 
 
-@router.get("/get_all", response={200: list[TaskOut], 400: dict}, auth=JWTAuth())
-def get_all(request):
+@router.get("/", response={200: list[TaskOut]}, auth=JWTAuth())
+def list_tasks(request):
     tasks = Task.objects.filter(user=request.auth)
     tasks_list = [
         TaskOut(
@@ -31,12 +31,10 @@ def get_all(request):
         )
         for t in tasks
     ]
-    if not tasks_list:
-        return 400, {"error": "No tasks found"}
     return 200, tasks_list
 
 
-@router.get("/get/{task_id}", response={200: TaskOut, 404: dict}, auth=JWTAuth())
+@router.get("/{task_id}", response={200: TaskOut, 404: dict}, auth=JWTAuth())
 def get_task(request, task_id: int):
     try:
         task = Task.objects.get(user=request.auth, id=task_id)
@@ -60,7 +58,7 @@ def get_task(request, task_id: int):
     )
 
 
-@router.delete("/delete/{task_id}", response={200: dict, 404: dict}, auth=JWTAuth())
+@router.delete("/{task_id}", response={200: dict, 404: dict}, auth=JWTAuth())
 def delete_task(request, task_id: int):
     try:
         task = Task.objects.get(user=request.auth, id=task_id)
@@ -71,7 +69,7 @@ def delete_task(request, task_id: int):
 
 
 @router.patch(
-    "/update/{task_id}", response={200: TaskOut, 400: dict, 404: dict}, auth=JWTAuth()
+    "/{task_id}", response={200: TaskOut, 400: dict, 404: dict}, auth=JWTAuth()
 )
 def update_task(request, task_id: int, data: TaskUpdateIn):
     task, err = task_services.update_task(request.auth, task_id, data)
@@ -96,8 +94,8 @@ def update_task(request, task_id: int, data: TaskUpdateIn):
     )
 
 
-@router.post("/create", response={200: TaskOut, 400: dict}, auth=JWTAuth())
-def create(request, data: TaskCreateIn):
+@router.post("/", response={200: TaskOut, 400: dict}, auth=JWTAuth())
+def create_task(request, data: TaskCreateIn):
     schedule_id = None
     schedule_name = data.schedule_name
     if schedule_name is not None:

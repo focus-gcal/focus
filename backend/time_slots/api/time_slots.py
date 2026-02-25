@@ -16,9 +16,20 @@ from .schemas.time_slots import TimeSlotCreateIn, TimeSlotOut, TimeSlotUpdateIn
 router = Router()
 
 
-@router.get("/get_all", response={200: list[TimeSlotOut]}, auth=JWTAuth())
-def get_all(request):
-    time_slots = get_time_slots_for_user(request.auth)
+@router.get("/", response={200: list[TimeSlotOut]}, auth=JWTAuth())
+def list_time_slots(
+    request,
+    start_time: datetime | None = None,
+    end_time: datetime | None = None,
+):
+    if start_time is not None and end_time is not None:
+        time_slots = TimeSlots.objects.filter(
+            user=request.auth,
+            start_time__gte=start_time,
+            end_time__lte=end_time,
+        ).order_by("start_time", "end_time")
+    else:
+        time_slots = get_time_slots_for_user(request.auth)
     return 200, [
         TimeSlotOut(
             id=ts.id,
@@ -31,7 +42,7 @@ def get_all(request):
     ]
 
 
-@router.post("/create", response={200: TimeSlotOut, 400: dict}, auth=JWTAuth())
+@router.post("/", response={200: TimeSlotOut, 400: dict}, auth=JWTAuth())
 def create_time_slot(request, data: TimeSlotCreateIn):
     time_slot = TimeSlots(user=request.auth, **data.model_dump())
     try:
@@ -48,9 +59,7 @@ def create_time_slot(request, data: TimeSlotCreateIn):
     )
 
 
-@router.get(
-    "/get/{time_slot_id}", response={200: TimeSlotOut, 404: dict}, auth=JWTAuth()
-)
+@router.get("/{time_slot_id}", response={200: TimeSlotOut, 404: dict}, auth=JWTAuth())
 def get_time_slot(request, time_slot_id: int):
     time_slot = get_time_slot_by_id_for_user(request.auth, time_slot_id)
     if time_slot is None:
@@ -64,31 +73,7 @@ def get_time_slot(request, time_slot_id: int):
     )
 
 
-@router.get(
-    "/get_by_start_time_end_time",
-    response={200: list[TimeSlotOut], 400: dict},
-    auth=JWTAuth(),
-)
-def get_by_start_time_end_time(request, start_time: datetime, end_time: datetime):
-    time_slots = TimeSlots.objects.filter(
-        user=request.auth, start_time__gte=start_time, end_time__lte=end_time
-    )
-    time_slots_list = [
-        TimeSlotOut(
-            id=ts.id,
-            user_id=ts.user_id,
-            task_id=ts.task_id,
-            start_time=ts.start_time,
-            end_time=ts.end_time,
-        )
-        for ts in time_slots
-    ]
-    return 200, time_slots_list
-
-
-@router.delete(
-    "/delete/{time_slot_id}", response={200: dict, 404: dict}, auth=JWTAuth()
-)
+@router.delete("/{time_slot_id}", response={200: dict, 404: dict}, auth=JWTAuth())
 def delete_time_slot(request, time_slot_id: int):
     time_slot = get_time_slot_by_id_for_user(request.auth, time_slot_id)
     if time_slot is None:
@@ -98,7 +83,7 @@ def delete_time_slot(request, time_slot_id: int):
 
 
 @router.patch(
-    "/update/{time_slot_id}",
+    "/{time_slot_id}",
     response={200: TimeSlotOut, 400: dict, 404: dict},
     auth=JWTAuth(),
 )

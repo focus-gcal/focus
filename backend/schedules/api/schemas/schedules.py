@@ -88,4 +88,15 @@ class ScheduleOut(Schema):
     day_of_week: int
     start_time: time
     end_time: time
+
+
+class ScheduleListOut(Schema):
+    """Schedule including the list of tasks assigned to its template."""
+
+    id: int
+    user_id: int
+    name: str
+    day_of_week: int
+    start_time: time
+    end_time: time
     tasks: list[ScheduleTaskOut] = []
