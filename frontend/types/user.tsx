@@ -9,5 +9,10 @@ enum AuthState {
   AUTHENTICATED = "authenticated",
   UNAUTHENTICATED = "unauthenticated"
 }
-export type { User }
+
+interface UserAuthStorage {
+  token: string
+  expiry_date: string
+}
+export type { User, UserAuthStorage }
 export { AuthState }

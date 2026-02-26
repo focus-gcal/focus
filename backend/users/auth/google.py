@@ -16,7 +16,6 @@ class GoogleCredentials:
     refresh_token: Optional[str]
     expiry: datetime
     scopes: List[str]
-    token_type: str
 
 
 @dataclass
@@ -32,7 +31,12 @@ class GoogleAuthService:
     redirect_uri = config.OAUTH["REDIRECT_URI"]
     token_url = "https://oauth2.googleapis.com/token"
     auth_uri = "https://accounts.google.com/o/oauth2/v2/auth"
-    scopes = ["openid", "email", "profile", "https://www.googleapis.com/auth/calendar"]
+    scopes = [
+        "openid",
+        "https://www.googleapis.com/auth/userinfo.email",
+        "https://www.googleapis.com/auth/userinfo.profile",
+        "https://www.googleapis.com/auth/calendar",
+    ]
 
     @staticmethod
     def exchange_code_for_token(code: str):
@@ -52,19 +56,20 @@ class GoogleAuthService:
             )
             flow.fetch_token(code=code)
             creds = flow.credentials
-            if not creds.expiry or creds.expiry < datetime.datetime.now(
-                datetime.timezone.utc
-            ):
+            creds.expiry = creds.expiry.replace(tzinfo=timezone.utc)
+            if not creds.expiry or creds.expiry < datetime.now(timezone.utc):
                 return None, "Token expired"
             if not set(GoogleAuthService.scopes).issubset(set(creds.scopes or [])):
                 return None, "Invalid scopes"
-            return GoogleCredentials(
-                id_token=creds.id_token,
-                access_token=creds.token,
-                refresh_token=creds.refresh_token,
-                expiry=creds.expiry,
-                scopes=creds.scopes if creds.scopes else [],
-                token_type=creds.token_type if creds.token_type else "Bearer",
+            return (
+                GoogleCredentials(
+                    id_token=creds.id_token,
+                    access_token=creds.token,
+                    refresh_token=creds.refresh_token,
+                    expiry=creds.expiry,
+                    scopes=creds.scopes if creds.scopes else [],
+                ),
+                None,
             )
         except Exception as e:
             print(e)

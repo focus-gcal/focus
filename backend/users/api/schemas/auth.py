@@ -21,23 +21,24 @@ class StateOut(Schema):
     error: Optional[str] = None
 
 
-class OAuthStartIn(Schema):
+class OAuthCallbackIn(Schema):
     code: str
     state: str
 
     @field_validator("code", "state")
-    def validate_code_and_state(cls, v):
-        if not v["code"] or not v["state"]:
-            raise ValueError("Code and state are required")
+    @classmethod
+    def not_empty(cls, v: str):
+        if not v.strip():
+            raise ValueError("Must not be empty")
         return v
 
 
-class OAuthStartOut(Schema):
+class OAuthCallbackOut(Schema):
     jwt_token: str
     expiry_date: datetime
     ok: bool
 
 
-class OAuthStartError(Schema):
+class OAuthCallbackError(Schema):
     ok: bool
     error: str
