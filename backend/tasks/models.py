@@ -1,4 +1,3 @@
-import schedules
 import schedules.models
 from django.conf import settings
 from django.db import models
@@ -38,7 +37,7 @@ class Task(models.Model):
     min_chunk = models.PositiveIntegerField(null=True, blank=True)
     max_duration_chunk = models.PositiveIntegerField(null=True, blank=True)
     schedule = models.ForeignKey(
-        schedules.models.Schedule,
+        schedules.models.ScheduleTemplate,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,

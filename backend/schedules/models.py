@@ -13,17 +13,44 @@ class DayOfWeek(models.IntegerChoices):
     SUNDAY = 6, "Sun"
 
 
+class ScheduleTemplate(models.Model):
+    """Logical schedule (e.g. 'Work') — unique name per user. Tasks assign to this."""
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="schedule_templates",
+    )
+    name = models.CharField(max_length=100)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "name"], name="unique_user_schedule_name"
+            ),
+        ]
+
+    def __str__(self):
+        return f"{self.user.username}: {self.name}"
+
+
 class Schedule(models.Model):
+    """One time block of a schedule (e.g. 'Work' on Monday 9-5). A template can have many slots."""
+
+    schedule_template = models.ForeignKey(
+        ScheduleTemplate,
+        on_delete=models.CASCADE,
+        related_name="slots",
+        null=True,
+        blank=True,
+    )
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="schedules",
     )
-
     name = models.CharField(max_length=100)
-
     day_of_week = models.PositiveSmallIntegerField(choices=DayOfWeek.choices)
-
     start_time = models.TimeField()
     end_time = models.TimeField()
 
