@@ -12,7 +12,7 @@ function PopupContent() {
   return (
     <div
       style={{
-        padding: 20,
+        padding: 0,
         minWidth: 320,
         minHeight: 500,
         width: 320,
