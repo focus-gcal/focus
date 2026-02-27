@@ -3,3 +3,18 @@ body {
   background: #212121;
   color: #ffffff;
 }
+
+/* Settings dropdown (three dots) - dark panel, white text for visibility */
+.dashboard-settings-dropdown.ant-dropdown .ant-dropdown-menu,
+.ant-dropdown.dashboard-settings-dropdown .ant-dropdown-menu {
+  background: #212121 !important;
+}
+.dashboard-settings-dropdown .ant-dropdown-menu-item,
+.ant-dropdown.dashboard-settings-dropdown .ant-dropdown-menu-item {
+  color: #ffffff !important;
+}
+.dashboard-settings-dropdown .ant-dropdown-menu-item:hover,
+.ant-dropdown.dashboard-settings-dropdown .ant-dropdown-menu-item:hover {
+  background: #383838 !important;
+  color: #ffffff !important;
+}
