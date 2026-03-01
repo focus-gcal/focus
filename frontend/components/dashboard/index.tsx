@@ -3,6 +3,7 @@ import { useAuth } from "context/auth"
 import { Storage } from "@plasmohq/storage"
 import { Button, ConfigProvider, Dropdown, Layout, Menu } from "antd"
 import logUrl from "raw:~assets/logo.png"
+import SchedulesView from "./schedules"
 
 type DashboardView = "tasks" | "schedules" | "settings"
 
@@ -192,15 +193,9 @@ function Dashboard() {
               primaryLabel: "Create Task",
             })}
 
-          {view === "schedules" &&
-            renderEmptyState({
-              title: "No schedules yet",
-              description:
-                "Create your first schedule to control when tasks can be auto-planned.",
-              primaryLabel: "Create Schedule",
-            })}
+          {view === "schedules" && <SchedulesView />}
 
-          {(view === "tasks" || view === "schedules") && (
+          {view === "tasks" && (
             <button
               type="button"
               aria-label="Add"
