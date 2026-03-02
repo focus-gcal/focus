@@ -1,4 +1,5 @@
-import { Button } from "antd"
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons"
+import { Button, Popconfirm } from "antd"
 import type { ScheduleListOut } from "./types/schedule"
 import { formatDays, formatTime } from "~/utils"
 
@@ -6,9 +7,10 @@ interface DetailViewProps {
   detail: ScheduleListOut
   onBack: () => void
   onUpdate: () => void
+  onDelete: () => void
 }
 
-export function DetailView({ detail, onBack, onUpdate }: DetailViewProps) {
+export function DetailView({ detail, onBack, onUpdate, onDelete }: DetailViewProps) {
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
         <Button
@@ -29,15 +31,41 @@ export function DetailView({ detail, onBack, onUpdate }: DetailViewProps) {
             borderRadius: 16,
             padding: 24,
           }}>
-          <h2
+          <div
             style={{
-              margin: 0,
+              display: "flex",
+              alignItems: "flex-start",
+              justifyContent: "space-between",
+              gap: 12,
               marginBottom: 8,
-              fontSize: 18,
-              fontWeight: 600,
             }}>
-            {detail.name}
-          </h2>
+            <h2 style={{ margin: 0, fontSize: 18, fontWeight: 600 }}>
+              {detail.name}
+            </h2>
+            <div style={{ display: "flex", gap: 8 }}>
+              <Button
+                type="text"
+                aria-label="Edit schedule"
+                icon={<EditOutlined />}
+                onClick={onUpdate}
+                style={{ color: "rgba(255,255,255,0.85)" }}
+              />
+              <Popconfirm
+                title="Delete schedule?"
+                description="This cannot be undone."
+                okText="Delete"
+                cancelText="Cancel"
+                okButtonProps={{ danger: true }}
+                onConfirm={onDelete}>
+                <Button
+                  type="text"
+                  danger
+                  aria-label="Delete schedule"
+                  icon={<DeleteOutlined />}
+                />
+              </Popconfirm>
+            </div>
+          </div>
           <p
             style={{
               margin: 0,
@@ -60,13 +88,6 @@ export function DetailView({ detail, onBack, onUpdate }: DetailViewProps) {
               ))}
             </ul>
           )}
-          <Button
-            type="primary"
-            shape="round"
-            style={{ marginTop: 16 }}
-            onClick={onUpdate}>
-            Update
-          </Button>
         </div>
     </div>
   )
