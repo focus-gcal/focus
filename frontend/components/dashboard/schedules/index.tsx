@@ -18,14 +18,18 @@ export default function SchedulesView() {
   const detail: ScheduleListOut | null =
     selectedSchedule ? getMockScheduleDetail(selectedSchedule) : null
 
-  const handleDelete = (schedule: ScheduleOut, e: React.MouseEvent) => {
-    e.stopPropagation()
-    setSchedules((prev) => prev.filter((s) => s.id !== schedule.id))
-    if (selectedScheduleId === schedule.id) setSelectedScheduleId(null)
-    if (editingSchedule && editingSchedule.id === schedule.id) {
+  const deleteScheduleById = (scheduleId: number) => {
+    setSchedules((prev) => prev.filter((s) => s.id !== scheduleId))
+    if (selectedScheduleId === scheduleId) setSelectedScheduleId(null)
+    if (editingSchedule && editingSchedule.id === scheduleId) {
       setEditingSchedule(null)
       setIsCreating(false)
     }
+  }
+
+  const handleDelete = (schedule: ScheduleOut, e: React.MouseEvent) => {
+    e.stopPropagation()
+    deleteScheduleById(schedule.id)
   }
 
   const handleEdit = (schedule: ScheduleOut, e: React.MouseEvent) => {
@@ -91,6 +95,7 @@ export default function SchedulesView() {
           setIsCreating(false)
           setEditingSchedule(detail)
         }}
+        onDelete={() => deleteScheduleById(detail.id)}
       />
     )
   }
