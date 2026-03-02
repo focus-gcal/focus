@@ -1,11 +1,10 @@
 import { useState } from "react"
 import { useAuth } from "context/auth"
 import { Storage } from "@plasmohq/storage"
-import { Button, ConfigProvider, Dropdown, Layout, Menu } from "antd"
+import { ConfigProvider, Dropdown, Layout, Menu, theme } from "antd"
 import logUrl from "raw:~assets/logo.png"
 import SchedulesView from "./schedules"
 import TasksView from "./tasks"
-import { theme } from "antd"
 type DashboardView = "tasks" | "schedules" | "settings"
 
 const headerMenuItems = [
@@ -97,22 +96,22 @@ function Dashboard() {
             }}
           />
           <Dropdown
-
-          menu={{
-            items: settingsDropdownItems,
-            onClick: ({ key }) => {
-              if (key === "sign-out") {
-                storage.remove("user_auth")
-                refreshAuth()
-              } else {
-                setView(key as DashboardView)
-              }
-            },
-            style: { background: "#212121", minWidth: 120 },
-          }}
-          trigger={["click"]}
-          placement="bottomRight"
-          >
+            menu={{
+              items: settingsDropdownItems,
+              onClick: ({ key }) => {
+                if (key === "sign-out") {
+                  storage.remove("user_auth")
+                  refreshAuth()
+                } else {
+                  setView(key as DashboardView)
+                }
+              },
+              style: { background: "#212121", minWidth: 120 },
+            }}
+            trigger={["click"]}
+            placement="bottomRight"
+            overlayStyle={{ background: "#212121", borderRadius: 8 }}
+            overlayClassName="dashboard-settings-dropdown">
             <button
               type="button"
               aria-label="Settings"
@@ -142,22 +141,21 @@ function Dashboard() {
             justifyContent: "flex-start",
             position: "relative",
           }}>
+          <div
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              maxWidth: 480,
+              width: "100%",
+              margin: "0 auto",
+              display: "flex",
+              flexDirection: "column",
+              minHeight: 0,
+            }}>
             <div
-              style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                maxWidth: 480,
-                width: "100%",
-                margin: "0 auto",
-                display: "flex",
-                flexDirection: "column",
-                minHeight: 0,
-              }}
-            >
-              <div
               className="schedule-scroll"
               style={{
                 flex: 1,
@@ -185,8 +183,8 @@ function Dashboard() {
                   </button>
                 </div>
               )}
-              </div>
             </div>
+          </div>
         </Layout.Content>
       </Layout>
     </ConfigProvider>

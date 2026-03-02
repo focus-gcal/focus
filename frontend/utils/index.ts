@@ -7,3 +7,11 @@ export function formatTime(s: string): string {
   if (h === 12) return `12:${m.toString().padStart(2, "0")} PM`
   return `${h - 12}:${m.toString().padStart(2, "0")} PM`
 }
+
+export function formatDays(days: number[]): string {
+  if (!days || days.length === 0) return ""
+  return days
+    .map((d) => DAY_LABELS[d] ?? "")
+    .filter(Boolean)
+    .join(", ")
+}

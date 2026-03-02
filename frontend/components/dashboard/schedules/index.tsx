@@ -42,7 +42,7 @@ export default function SchedulesView() {
       id: nextId,
       user_id: userId,
       name: "",
-      day_of_week: 0,
+      days_of_week: [0],
       start_time: "09:00",
       end_time: "17:00",
     }
