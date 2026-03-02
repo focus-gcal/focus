@@ -5,7 +5,7 @@ import { Button, ConfigProvider, Dropdown, Layout, Menu } from "antd"
 import logUrl from "raw:~assets/logo.png"
 import SchedulesView from "./schedules"
 import TasksView from "./tasks"
-
+import { theme } from "antd"
 type DashboardView = "tasks" | "schedules" | "settings"
 
 const headerMenuItems = [
@@ -27,6 +27,7 @@ function Dashboard() {
   return (
     <ConfigProvider
       theme={{
+        algorithm: theme.darkAlgorithm,
         token: {
           borderRadius: 8,
           colorBgContainer: "#212121",
@@ -45,7 +46,7 @@ function Dashboard() {
             controlItemBgHover: "#383838",
             controlItemBgActive: "#404040",
           },
-        },
+        },        
       }}>
       <Layout
         style={{
