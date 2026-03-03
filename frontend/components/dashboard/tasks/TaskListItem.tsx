@@ -1,3 +1,4 @@
+import { useState } from "react"
 import type { MenuProps } from "antd"
 import { Button, Dropdown, Space, Typography } from "antd"
 import { CheckOutlined, ClockCircleOutlined, FlagOutlined, ScheduleOutlined, TagOutlined } from "@ant-design/icons"
@@ -32,10 +33,11 @@ const getCheckMarkButtonCSS = (status: string) => {
     }
     return {
         border: "2px solid rgba(255,255,255,0.35)",
-        background: "transparent"
+        background: "rgba(255,255,255,0.08)"
     }
 }
 export function TaskListItem({ task, onSelect, onEdit, onDelete }: TaskListItemProps) {
+  const [isCheckHovered, setIsCheckHovered] = useState(false)
   const menuItems: MenuProps["items"] = [
     {
       key: "edit",
@@ -55,6 +57,7 @@ export function TaskListItem({ task, onSelect, onEdit, onDelete }: TaskListItemP
     },
   ]
   const isCompleted = task.status === "completed"
+  const checkButtonCss = getCheckMarkButtonCSS(task.status)
 
   return (
     <div
@@ -85,6 +88,8 @@ export function TaskListItem({ task, onSelect, onEdit, onDelete }: TaskListItemP
           shape="circle"
           aria-label="Mark task complete"
           onClick={(e) => e.stopPropagation()}
+          onMouseEnter={() => setIsCheckHovered(true)}
+          onMouseLeave={() => setIsCheckHovered(false)}
           style={{
             width: 18,
             height: 18,
@@ -94,7 +99,8 @@ export function TaskListItem({ task, onSelect, onEdit, onDelete }: TaskListItemP
             display: "inline-flex",
             alignItems: "center",
             justifyContent: "center",
-            ...getCheckMarkButtonCSS(task.status)
+            ...checkButtonCss,
+            background: isCheckHovered ? "transparent" : checkButtonCss.background,
           }}
           icon={isCompleted ? <CheckOutlined style={{ color: "#ffffff", fontSize: 10, lineHeight: 1, position: "relative", top: -0.5 }} /> : undefined}
         />
