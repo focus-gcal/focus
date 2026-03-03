@@ -1,0 +1,81 @@
+import type { TaskOut } from "../types/task"
+// id: int
+// user_id: int
+// title: str
+// description: str
+// duration: int
+// priority: int
+// deadline: datetime | None
+// is_hard_deadline: bool
+// status: str
+// start_date: datetime | None
+// min_chunk: int | None
+// max_duration_chunk: int | None
+// schedule_id: int | None = None
+// schedule_name: str | None = None
+export const MOCK_TASKS: TaskOut[] = [
+  {
+    id: 1,
+    user_id: 1,
+    title: "Prepare sprint demo slides",
+    description: "Summarize completed stories and capture blockers for review.",
+    duration: 90,
+    priority: 2,
+    deadline: "2026-03-03T16:30:00Z",
+    is_hard_deadline: true,
+    status: "in_progress",
+    start_date: "2026-03-02T09:00:00Z",
+    min_chunk: 30,
+    max_duration_chunk: 60,
+    schedule_id: 2,
+    schedule_name: "Workday Focus",
+  },
+  {
+    id: 2,
+    user_id: 1,
+    title: "Finish API integration tests",
+    description: "Add coverage for task create/update flows and edge cases.",
+    duration: 120,
+    priority: 3,
+    deadline: "2026-03-04T20:00:00Z",
+    is_hard_deadline: true,
+    status: "todo",
+    start_date: "2026-03-03T13:00:00Z",
+    min_chunk: 45,
+    max_duration_chunk: 90,
+    schedule_id: 2,
+    schedule_name: "Workday Focus",
+  },
+  {
+    id: 3,
+    user_id: 1,
+    title: "Review weekly budgetw weekly budgetw weekly budgetw weekly budgetw weekly budgetw weekly budget",
+    description: "Categorize expenses and update monthly savings tracker.",
+    duration: 45,
+    priority: 1,
+    deadline: "2026-03-06T18:00:00Z",
+    is_hard_deadline: false,
+    status: "completed",
+    start_date: "2026-03-01T17:00:00Z",
+    min_chunk: 15,
+    max_duration_chunk: 30,
+    schedule_id: 3,
+    schedule_name: "Deep Work Block",
+  },
+  {
+    id: 4,
+    user_id: 1,
+    title: "Refactor task list filters",
+    description: "Improve filter performance and reduce unnecessary re-renders.",
+    duration: 75,
+    priority: 2,
+    deadline: "2026-03-07T12:00:00Z",
+    is_hard_deadline: false,
+    status: "blocked",
+    start_date: "2026-03-05T10:30:00Z",
+    min_chunk: 25,
+    max_duration_chunk: 50,
+    schedule_id: 3,
+    schedule_name: "Deep Work Block",
+  },
+]
