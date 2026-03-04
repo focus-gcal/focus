@@ -1,37 +1,62 @@
-// List item (what you get from GET /schedules/)
-//interface describes the shape and exists at type check time and removed when code is compiled
-export interface ScheduleOut {
-    id: number
-    user_id: number
-    name: string
-    day_of_week: number
-    start_time: string
-    end_time: string
-  }
-  
-  // Task shown inside a schedule detail
-  export interface ScheduleTaskOut {
-    id: number
-    title: string
-  }
-  
-  // Single schedule with tasks (GET /schedules/{id})
-  export interface ScheduleListOut extends ScheduleOut {
-    tasks: ScheduleTaskOut[]
-  }
-  
-  // Create schedule (POST body)
-  export interface ScheduleCreateIn {
-    name: string
-    day_of_week: number
-    start_time: string
-    end_time: string
-  }
-  
-  // Update schedule (PATCH body – all optional)
-  export interface ScheduleUpdateIn {
-    name?: string
-    day_of_week?: number
-    start_time?: string
-    end_time?: string
-  }
+// One concrete time range on a specific day (used by the UI editor)
+export interface ScheduleTimeBlock {
+  /** 0 = Mon ... 6 = Sun */
+  day_of_week: number
+  /** "HH:MM" in 24h format */
+  start_time: string
+  /** "HH:MM" in 24h format */
+  end_time: string
+}
+
+// ----- Backend API shapes (mirror Django / Ninja schemas) -----
+
+// List item (GET /schedules/)
+export interface ScheduleApiOut {
+  id: number
+  user_id: number
+  name: string
+  /** Single day of week from the backend, 0 = Mon ... 6 = Sun */
+  day_of_week: number
+  start_time: string
+  end_time: string
+}
+
+// Single schedule with tasks (GET /schedules/{id})
+export interface ScheduleApiListOut extends ScheduleApiOut {
+  tasks: ScheduleTaskOut[]
+}
+
+// Create schedule (POST body)
+export interface ScheduleApiCreateIn {
+  name: string
+  day_of_week: number
+  start_time: string
+  end_time: string
+}
+
+// Update schedule (PATCH body – all optional)
+export interface ScheduleApiUpdateIn {
+  name?: string
+  day_of_week?: number
+  start_time?: string
+  end_time?: string
+}
+
+// ----- Frontend-only shapes used by the dashboard UI -----
+
+// What the dashboard stores in state / mocks (can aggregate multiple blocks, etc.)
+export interface ScheduleOut extends ScheduleApiOut {
+  /** Optional detailed per-day time blocks for the rich editor UI. */
+  time_blocks?: ScheduleTimeBlock[]
+}
+
+// Task shown inside a schedule detail
+export interface ScheduleTaskOut {
+  id: number
+  title: string
+}
+
+// Single schedule with tasks in the dashboard UI
+export interface ScheduleListOut extends ScheduleOut {
+  tasks: ScheduleTaskOut[]
+}
