@@ -1,4 +1,5 @@
 export const DAY_LABELS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+export const CHUNK_MINUTES = 15
 
 export function formatTime(s: string): string {
   const [h, m] = s.split(":").map(Number)
@@ -150,4 +151,95 @@ export function getScheduleDaySegments(schedule: {
     }
   }
   return out
+}
+export function getTaskPriorityLabel(priority: number): string {
+  switch (priority) {
+    case 1:
+      return "Low"
+    case 2:
+      return "Medium"
+    case 3:
+      return "High"
+  }
+}
+
+export const formatDateCompact = (dateTimeString: string | null) => {
+  if (!dateTimeString) return null
+
+  const date = new Date(dateTimeString)
+  if (Number.isNaN(date.getTime())) return null
+
+  const weekday = new Intl.DateTimeFormat(undefined, { weekday: "short" }).format(date)
+  const monthDay = new Intl.DateTimeFormat(undefined, { month: "short", day: "numeric" }).format(date)
+  return `${weekday} · ${monthDay}`
+}
+
+export const formatDuration = (durationMinutes: number) => {
+  if (!Number.isFinite(durationMinutes) || durationMinutes <= 0) return "0m"
+
+  const hours = Math.floor(durationMinutes / 60)
+  const minutes = durationMinutes % 60
+  if (hours === 0) return `${minutes}m`
+  if (minutes === 0) return `${hours}h`
+  return `${hours}h ${minutes}m`
+}
+
+export const chunkCountToMinutes = (chunkCount: number) => {
+  if (!Number.isFinite(chunkCount) || chunkCount <= 0) return 0
+  return chunkCount * CHUNK_MINUTES
+}
+
+export const formatChunkDuration = (chunkCount: number | null) => {
+  if (chunkCount == null) return null
+  return formatDuration(chunkCountToMinutes(chunkCount))
+}
+
+export const formatChunkRange = (
+  minChunk: number | null,
+  maxDurationChunk: number | null
+) => {
+  if (minChunk == null || maxDurationChunk == null) return null
+  return `${formatDuration(chunkCountToMinutes(minChunk))} - ${formatDuration(chunkCountToMinutes(maxDurationChunk))}`
+}
+
+export const compactTitle = (title: string) => {
+  if (title.length > 30) return title.slice(0, 30) + "..."
+  return title
+}
+
+export const getTaskStatusLabel = (status: string) => {
+  switch (status) {
+    case "todo":
+      return "To Do"
+    case "in_progress":
+      return "In Progress"
+    case "completed":
+      return "Completed"
+    case "blocked":
+      return "Blocked"
+  }
+}
+
+export const getTaskStatusColor = (status: string) => {
+  switch (status) {
+    case "todo":
+      return "rgba(255,255,255,0.7)"
+    case "in_progress":
+      return "rgba(245, 158, 11, 1)"
+    case "completed":
+      return "rgba(16, 185, 129, 1)"
+    case "blocked":
+      return "rgba(239, 68, 68, 1)"
+  }
+}
+
+export const getTaskPriorityColor = (priority: number) => {
+  switch (priority) {
+    case 1:
+      return "rgba(100, 116, 139, 1)"
+    case 2:
+      return "rgba(196, 181, 253, 1)"
+    case 3:
+      return "rgba(79, 70, 229, 1)  "
+  }
 }
