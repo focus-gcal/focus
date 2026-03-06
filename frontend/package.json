@@ -14,6 +14,7 @@
     "@ant-design/icons": "^6.1.0",
     "@plasmohq/messaging": "^0.7.2",
     "@plasmohq/storage": "^1.15.0",
+    "@tanstack/react-query": "^5.90.21",
     "antd": "^6.3.0",
     "dayjs": "^1.11.19",
     "plasmo": "0.90.5",

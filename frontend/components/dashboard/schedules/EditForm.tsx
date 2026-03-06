@@ -77,9 +77,41 @@ export function ScheduleEditForm({
       setErrorMessage("Title is required.")
       return
     }
+
+    // If any block has an end time before (or equal to) its start time, block save.
+    const invalidBlocks = timeBlocks.filter((b) => !isValidBlock(b))
+    if (invalidBlocks.length > 0) {
+      setErrorMessage("Each time block must have a start time before its end time.")
+      return
+    }
+
     if (normalizedBlocks.length === 0) {
       setErrorMessage("At least one valid time block is required.")
       return
+    }
+
+    // Check for overlapping blocks on the same day
+    const blocksByDay: Record<number, ScheduleTimeBlock[]> = {}
+    for (const block of normalizedBlocks) {
+      if (!blocksByDay[block.day_of_week]) {
+        blocksByDay[block.day_of_week] = []
+      }
+      blocksByDay[block.day_of_week].push(block)
+    }
+
+    for (const dayStr of Object.keys(blocksByDay)) {
+      const day = Number(dayStr)
+      const dayBlocks = blocksByDay[day].slice().sort((a, b) =>
+        a.start_time.localeCompare(b.start_time)
+      )
+      for (let i = 1; i < dayBlocks.length; i++) {
+        const prev = dayBlocks[i - 1]
+        const curr = dayBlocks[i]
+        if (curr.start_time < prev.end_time) {
+          setErrorMessage("Time blocks on the same day cannot overlap.")
+          return
+        }
+      }
     }
 
     const daysOfWeek = Array.from(
