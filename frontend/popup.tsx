@@ -1,10 +1,12 @@
 import { AuthState } from "types/user"
-
+import {QueryClient, QueryClientProvider} from "@tanstack/react-query"
 import { Dashboard, Loading, Login } from "~components"
 
 import "./popup.css"
 
 import { AuthProvider, useAuth } from "context/auth"
+
+const queryClient = new QueryClient()
 
 function PopupContent() {
   const { authState } = useAuth()
@@ -28,8 +30,10 @@ function PopupContent() {
 
 export default function IndexPopup() {
   return (
+    <QueryClientProvider client={queryClient}>
     <AuthProvider>
       <PopupContent />
     </AuthProvider>
+    </QueryClientProvider>
   )
 }

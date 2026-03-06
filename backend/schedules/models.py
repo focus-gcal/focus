@@ -55,8 +55,29 @@ class Schedule(models.Model):
     end_time = models.TimeField()
 
     def clean(self):
+        # Basic check: end must be after start for this block.
         if self.end_time <= self.start_time:
             raise ValidationError("End time must be after start time.")
+
+        # Prevent overlapping blocks on the same day for the same template.
+        # Only applies when attached to a template.
+        if self.schedule_template_id is not None:
+            qs = Schedule.objects.filter(
+                schedule_template_id=self.schedule_template_id,
+                day_of_week=self.day_of_week,
+            )
+            if self.pk:
+                qs = qs.exclude(pk=self.pk)
+
+            for other in qs:
+                # Overlap if this block starts before the other ends
+                # AND ends after the other starts.
+                overlaps = (
+                    self.start_time < other.end_time
+                    and self.end_time > other.start_time
+                )
+                if overlaps:
+                    raise ValidationError("Time blocks on the same day cannot overlap.")
 
     def __str__(self):
         return f"{self.name} ({self.get_day_of_week_display()} {self.start_time}-{self.end_time})"

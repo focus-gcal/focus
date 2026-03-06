@@ -27,8 +27,8 @@ def create_schedule_template(
     """
     try:
         template = ScheduleTemplate.objects.create(user=user, name=data.name)
-        for block in data.blocks:
-            Schedule.objects.create(
+        for block in data.blocks or []:
+            schedule = Schedule(
                 schedule_template=template,
                 user=user,
                 name=template.name,
@@ -36,6 +36,8 @@ def create_schedule_template(
                 start_time=block.start_time,
                 end_time=block.end_time,
             )
+            schedule.full_clean()
+            schedule.save()
     except Exception as e:
         return None, (400, {"error": str(e)})
 
@@ -64,14 +66,14 @@ def update_schedule_template(
     if name is not None:
         template.name = name
 
-    # Replace blocks if provided
+    # Replace blocks if provided (payload contains dicts; use `data.blocks` for typed items)
     blocks = payload.get("blocks")
     if blocks is not None:
         # Clear existing slots
         template.slots.all().delete()
         # Recreate slots for each block
-        for b in blocks:
-            Schedule.objects.create(
+        for b in data.blocks or []:
+            schedule = Schedule(
                 schedule_template=template,
                 user=user,
                 name=template.name,
@@ -79,6 +81,8 @@ def update_schedule_template(
                 start_time=b.start_time,
                 end_time=b.end_time,
             )
+            schedule.full_clean()
+            schedule.save()
 
     try:
         template.full_clean()

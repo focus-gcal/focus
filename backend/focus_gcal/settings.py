@@ -68,7 +68,7 @@ CORS_ALLOWED_ORIGINS = [
     "chrome-extension://ejkkilpcpkhfjgbdjllidincdcdpkkcf",
 ]
 
-CORS_ALLOW_METHODS = ["GET", "POST", "OPTIONS"]
+CORS_ALLOW_METHODS = ["GET", "POST", "PATCH", "DELETE", "OPTIONS"]
 
 CORS_ALLOW_HEADERS = [
     "accept",
