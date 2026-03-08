@@ -17,3 +17,5 @@ venv/
 # Editor / Cursor temp files
 _tmp_*
 db.sqlite3
+
+/node_modules
