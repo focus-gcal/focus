@@ -1,12 +1,22 @@
 import { AuthState } from "types/user"
-import {QueryClient, QueryClientProvider} from "@tanstack/react-query"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { Dashboard, Loading, Login } from "~components"
 
 import "./popup.css"
 
 import { AuthProvider, useAuth } from "context/auth"
 
-const queryClient = new QueryClient()
+const SCHEDULE_QUERY_TTL_MS = 60_000
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: SCHEDULE_QUERY_TTL_MS,
+      gcTime: 5 * 60_000,
+      refetchOnWindowFocus: false
+    }
+  }
+})
 
 function PopupContent() {
   const { authState } = useAuth()
