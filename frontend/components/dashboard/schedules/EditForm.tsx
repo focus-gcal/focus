@@ -12,6 +12,8 @@ interface ScheduleEditFormProps {
   dayLabels: string[]
   onSave: (updated: ScheduleOut) => void
   onCancel: () => void
+  /** Show loading state on Save button while request is in flight */
+  isSaving?: boolean
 }
 
 export function ScheduleEditForm({
@@ -19,6 +21,7 @@ export function ScheduleEditForm({
   dayLabels,
   onSave,
   onCancel,
+  isSaving = false,
 }: ScheduleEditFormProps) {
   const [name, setName] = useState(schedule.name)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -294,10 +297,19 @@ export function ScheduleEditForm({
           <Typography.Text style={{ color: "#ff7875", fontSize: 12, marginBottom: 10 }}>{errorMessage}</Typography.Text>
         ) : null}
           <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
-            <Button type="primary" htmlType="submit" shape="round">
+            <Button
+              type="primary"
+              htmlType="submit"
+              shape="round"
+              loading={isSaving}
+              disabled={isSaving}>
               Save
             </Button>
-            <Button type="default" onClick={onCancel} shape="round">
+            <Button
+              type="default"
+              onClick={onCancel}
+              shape="round"
+              disabled={isSaving}>
               Cancel
             </Button>
           </div>

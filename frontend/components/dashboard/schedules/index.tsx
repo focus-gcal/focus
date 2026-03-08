@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { toast } from "react-hot-toast"
+import { Loading } from "~components"
 import type { ScheduleOut, ScheduleListOut } from "./types/schedule"
 import { DAY_LABELS } from "~/utils"
 import { ScheduleEditForm } from "./EditForm"
@@ -116,7 +117,7 @@ export default function SchedulesView() {
   let content
   
   if (isLoading) {
-    content = <div style={{ padding: 16, textAlign: "center" }}>Loading schedules…</div>
+    content = <Loading />
   } else if (error) {
     content = (
       <div style={{ padding: 16, color: "red" }}>
@@ -143,15 +144,12 @@ export default function SchedulesView() {
           setEditingSchedule(null)
           setIsCreating(false)
         }}
+        isSaving={createSchedule.isPending || updateSchedule.isPending}
       />
     )
   } else if (selectedScheduleId != null) {
     if (detailQuery.isLoading) {
-      content = (
-        <div style={{ padding: 16, textAlign: "center" }}>
-          Loading schedule…
-        </div>
-      )
+      content = <Loading />
     } else if (detailQuery.error) {
       content = (
         <div style={{ padding: 16 }}>
