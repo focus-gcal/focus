@@ -5,6 +5,7 @@ import type { TaskCreateIn, TaskUpdateIn } from "~components/dashboard/tasks/typ
 
 import { TASKS_LIST_QUERY_KEY } from "./useTasksList"
 import { taskDetailQueryKey } from "./useTaskDetail"
+import { scheduleDetailQueryKey } from "./useScheduleDetail"
 
 const TASK_MESSAGE_NAME = "task" as Parameters<typeof sendToBackground>[0]["name"]
 
@@ -21,8 +22,10 @@ export function useCreateTask() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (payload: TaskCreateIn) => sendTaskMessage({ action: "create", payload }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["tasks"] })
+    onSuccess: (_, payload) => {
+      queryClient.invalidateQueries({ queryKey: ["tasks"] }),
+      queryClient.invalidateQueries({ queryKey: TASKS_LIST_QUERY_KEY })
+      queryClient.invalidateQueries({ queryKey: scheduleDetailQueryKey(payload.schedule_id) })
     },
   })
 }
@@ -37,6 +40,7 @@ export function useUpdateTask() {
       queryClient.invalidateQueries({
         queryKey: taskDetailQueryKey(variables.task_id),
       })
+      queryClient.invalidateQueries({ queryKey: scheduleDetailQueryKey(variables.payload.schedule_id) })
     },
   })
 }
@@ -44,12 +48,13 @@ export function useUpdateTask() {
 export function useDeleteTask() {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (task_id: number) => sendTaskMessage({ action: "delete", task_id }),
-    onSuccess: (_, task_id) => {
+    mutationFn: (payload: { task_id: number; schedule_id: number | null }) => sendTaskMessage({ action: "delete", ...payload }),
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: TASKS_LIST_QUERY_KEY })
       queryClient.invalidateQueries({
-        queryKey: taskDetailQueryKey(task_id),
+        queryKey: taskDetailQueryKey(variables.task_id),
       })
+      queryClient.invalidateQueries({ queryKey: scheduleDetailQueryKey(variables.schedule_id) })
     },
   })
 }

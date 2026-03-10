@@ -38,9 +38,9 @@ export default function TasksView() {
     name: schedule.name,
   }))
 
-  const deleteTaskById = async (taskId: number) => {
+  const deleteTaskById = async (taskId: number, scheduleId: number | null) => {
     try {
-      await deleteTask.mutateAsync(taskId)
+      await deleteTask.mutateAsync({ task_id: taskId, schedule_id: scheduleId })
       if (selectedTaskId === taskId) setSelectedTaskId(null)
       if (editingTask?.id === taskId) {
         setEditingTask(null)
@@ -54,7 +54,7 @@ export default function TasksView() {
 
   const handleDelete = (task: TaskOut, e: React.MouseEvent) => {
     e.stopPropagation()
-    deleteTaskById(task.id)
+    deleteTaskById(task.id, task.schedule_id)
   }
 
   const handleEdit = (task: TaskOut, e: React.MouseEvent) => {
@@ -115,6 +115,7 @@ export default function TasksView() {
       min_chunk: updated.min_chunk,
       max_duration_chunk: updated.max_duration_chunk,
       schedule_name: updated.schedule_name,
+      schedule_id: updated.schedule_id,
     }
 
     try {
@@ -197,7 +198,7 @@ export default function TasksView() {
             setEditingTask(detail)
           }}
           onDelete={async () => {
-            await deleteTaskById(detail.id)
+            await deleteTaskById(detail.id, detail.schedule_id)
           }}
         />
       )
