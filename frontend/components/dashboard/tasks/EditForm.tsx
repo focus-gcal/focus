@@ -9,6 +9,7 @@ interface TaskEditFormProps {
   schedules: Array<{ id: number; name: string }>
   onSave: (updated: TaskOut) => void
   onCancel: () => void
+  isSaving?: boolean
 }
 
 const statusOptions: Array<{ label: string; value: TaskStatus }> = [
@@ -36,7 +37,13 @@ const fromInputDateValue = (value: string) => {
   return `${value}T00:00:00.000Z`
 }
 
-export function TaskEditForm({ task, schedules, onSave, onCancel }: TaskEditFormProps) {
+export function TaskEditForm({
+  task,
+  schedules,
+  onSave,
+  onCancel,
+  isSaving = false,
+}: TaskEditFormProps) {
   const initialScheduleId =
     task.schedule_id ??
     schedules.find((schedule) => schedule.name === task.schedule_name)?.id ??
@@ -68,6 +75,10 @@ export function TaskEditForm({ task, schedules, onSave, onCancel }: TaskEditForm
     }
     if (duration <= 0) {
       setErrorMessage("Duration must be greater than 0.")
+      return
+    }
+    if(startDate != null && startDate > deadline) {
+      setErrorMessage("Start date must be before deadline.")
       return
     }
     if (minChunk != null && minChunk <= 0) {
@@ -198,6 +209,11 @@ export function TaskEditForm({ task, schedules, onSave, onCancel }: TaskEditForm
                 }))}
                 style={{ width: 150, minWidth: 150 }}
                 size="middle"
+                notFoundContent={
+                  <Typography.Text type="secondary" style={{ fontSize: 12 }}>
+                    You haven't created any schedules yet.
+                  </Typography.Text>
+                }
               />
             </div>
           </Space>
@@ -267,10 +283,15 @@ export function TaskEditForm({ task, schedules, onSave, onCancel }: TaskEditForm
           ) : null}
 
           <Space size={8}>
-            <Button type="primary" htmlType="submit" shape="round">
+            <Button
+              type="primary"
+              htmlType="submit"
+              shape="round"
+              loading={isSaving}
+              disabled={isSaving}>
               Save
             </Button>
-            <Button onClick={onCancel} shape="round">
+            <Button onClick={onCancel} shape="round" disabled={isSaving}>
               Cancel
             </Button>
           </Space>

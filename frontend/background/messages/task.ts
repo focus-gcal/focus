@@ -139,10 +139,10 @@ const handler: PlasmoMessaging.MessageHandler<TaskRequest, TaskResponse> = async
   const action = req.body?.action
 
   if (action === "list") {
-    if (listCache && listCache.fetchedAt > Date.now() - LIST_TTL_MS) {
-      res.send({ ok: true, data: listCache.data })
-      return
-    }
+    // if (listCache && listCache.fetchedAt > Date.now() - LIST_TTL_MS) {
+    //   res.send({ ok: true, data: listCache.data })
+    //   return
+    // }
     try {
       const data = await fetchTasksList(token)
       listCache = { data, fetchedAt: Date.now() }
@@ -160,10 +160,10 @@ const handler: PlasmoMessaging.MessageHandler<TaskRequest, TaskResponse> = async
       res.send({ ok: false, error: "task_id is required" })
       return
     }
-    if (detailCache.has(task_id) && detailCache.get(task_id)!.fetchedAt > Date.now() - DETAIL_TTL_MS) {
-      res.send({ ok: true, data: detailCache.get(task_id)!.data })
-      return
-    }
+    // if (detailCache.has(task_id) && detailCache.get(task_id)!.fetchedAt > Date.now() - DETAIL_TTL_MS) {
+    //   res.send({ ok: true, data: detailCache.get(task_id)!.data })
+    //   return
+    // }
     try {
       const data = await fetchTaskDetail(token, task_id)
       detailCache.set(task_id, { data, fetchedAt: Date.now() })

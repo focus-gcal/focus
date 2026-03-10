@@ -10,6 +10,7 @@ import { useTasksList } from "~/hooks/useTasksList"
 import { useTaskDetail } from "~/hooks/useTaskDetail"
 import { useCreateTask, useDeleteTask, useUpdateTask } from "~/hooks/useTaskMutations"
 import { useSchedulesList } from "~/hooks/useSchedulesList"
+import Loading from "~components/Loading"
 
 const NEW_TASK_ID = 0
 
@@ -140,7 +141,7 @@ export default function TasksView() {
   let content
 
   if (isLoading) {
-    content = <div style={{ padding: 16, textAlign: "center" }}>Loading tasks...</div>
+    content = <Loading />
   } else if (error) {
     content = (
       <div style={{ padding: 16, color: "red" }}>
@@ -166,11 +167,12 @@ export default function TasksView() {
           setEditingTask(null)
           setIsCreating(false)
         }}
+        isSaving={createTask.isPending || updateTask.isPending}
       />
     )
   } else if (selectedTaskId != null) {
     if (detailQuery.isLoading) {
-      content = <div style={{ padding: 16, textAlign: "center" }}>Loading task...</div>
+      content = <Loading />
     } else if (detailQuery.error) {
       content = (
         <div style={{ padding: 16 }}>
