@@ -23,5 +23,55 @@ services:
     ports:
       - "${REDIS_PORT:-6379}:6379"
 
+  backend:
+    build:
+      context: ./backend
+    container_name: backend
+    restart: unless-stopped
+    env_file:
+      - ./env/.env
+    volumes:
+      - ./backend:/app
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    command: sh -c "python manage.py migrate --noinput && python manage.py runserver 0.0.0.0:8000"
+    ports:
+      - "8000:8000"
+
+  celery_worker:
+    build:
+      context: ./backend
+    container_name: celery_worker
+    restart: unless-stopped
+    env_file:
+      - ./env/.env
+    volumes:
+      - ./backend:/app
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    command: celery -A focus_gcal worker -l info
+
+  # celery_beat:
+  #   build:
+  #     context: ./backend
+  #   container_name: celery_beat
+  #   restart: unless-stopped
+  #   env_file:
+  #     - ./env/.env
+  #   volumes:
+  #     - ./backend:/app
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
+  #     redis:
+  #       condition: service_started
+  #   command: celery -A focus_gcal beat -l info
+
 volumes:
   pgdata:
