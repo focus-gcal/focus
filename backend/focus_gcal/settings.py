@@ -45,12 +45,14 @@ INSTALLED_APPS = [
     "users.apps.UsersConfig",
     "schedules.apps.SchedulesConfig",
     "tasks.apps.TasksConfig",
+    "jobs.apps.JobsConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django_celery_results",
 ]
 
 MIDDLEWARE = [
@@ -141,6 +143,10 @@ USE_I18N = True
 
 USE_TZ = True
 
+# celery
+CELERY_BROKER_URL = REDIS["URL"]
+CELERY_TIMEZONE = TIME_ZONE
+CELERY_RESULT_BACKEND = "django-db"
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
