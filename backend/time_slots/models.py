@@ -41,3 +41,16 @@ class TimeSlots(models.Model):
     def __str__(self):
         name = self.task.title if self.task else "Unnamed Task"
         return f"{self.user.username}: {name} ({self.start_time} → {self.end_time})"
+
+
+class GoogleCalendarEvent(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="google_calendar_events",
+    )
+    event_id = models.CharField(max_length=255)
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
+    summary = models.CharField(max_length=255)
+    description = models.TextField()

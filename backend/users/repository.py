@@ -2,6 +2,7 @@ from django.contrib.auth.hashers import make_password
 from django.db import transaction
 from users.auth.google import GoogleCredentials, GoogleUserInfo
 from users.models import User
+from utils.gcal import GoogleCalendar
 
 
 class UserRepository:
@@ -12,6 +13,9 @@ class UserRepository:
     ):
         user = User.objects.filter(google_sub=user_info.sub).first()
         if user is None:
+            gcal = GoogleCalendar(credentials.access_token)
+            created = gcal.create_calendar()
+            gcal_calendar_id = created.get("id")
             user = User.objects.create(
                 email=user_info.email,
                 google_sub=user_info.sub,
@@ -21,7 +25,9 @@ class UserRepository:
                 is_active=True,
                 is_staff=False,
                 is_superuser=False,
+                gcal_calendar_id=gcal_calendar_id,
             )
+
             return user
 
         changed = False

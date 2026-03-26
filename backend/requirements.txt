@@ -23,8 +23,13 @@ dnspython==2.8.0
 email-validator==2.3.0
 filelock==3.20.3
 flake8==7.3.0
+google-api-core==2.30.0
+google-api-python-client==2.193.0
 google-auth==2.48.0
+google-auth-httplib2==0.3.0
 google-auth-oauthlib==1.2.4
+googleapis-common-protos==1.73.0
+httplib2==0.31.2
 identify==2.6.16
 idna==3.11
 iniconfig==2.1.0
@@ -44,6 +49,8 @@ platformdirs==4.5.1
 pluggy==1.6.0
 pre_commit==4.5.1
 prompt_toolkit==3.0.52
+proto-plus==1.27.1
+protobuf==6.33.6
 psycopg==3.3.2
 psycopg-binary==3.3.2
 pyasn1==0.6.2
@@ -55,6 +62,7 @@ pydantic_core==2.41.5
 pyflakes==3.4.0
 Pygments==2.19.2
 PyJWT==2.11.0
+pyparsing==3.3.2
 pytest==8.4.2
 python-can==4.4.2
 python-dateutil==2.9.0.post0
@@ -74,6 +82,7 @@ typing-inspection==0.4.2
 typing_extensions==4.15.0
 tzdata==2025.2
 tzlocal==5.3.1
+uritemplate==4.2.0
 urllib3==2.6.3
 vine==5.1.0
 virtualenv==20.36.1
