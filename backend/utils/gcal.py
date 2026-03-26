@@ -38,7 +38,6 @@ class GoogleCalendar:
                 deleted_event_ids.append(request_id)
             else:
                 print(f"Error deleting event {request_id}: {exception}")
-                raise exception
 
         batch = self.service.new_batch_http_request(callback=batch_delete_callback)
         for event in events:

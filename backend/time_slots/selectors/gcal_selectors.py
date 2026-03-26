@@ -1,5 +1,3 @@
-from datetime import date
-
 from django.db.models import QuerySet
 from django.utils import timezone
 from time_slots.models import GoogleCalendarEvent
@@ -10,10 +8,8 @@ def get_today_future_gcal_events_for_user(
 ) -> QuerySet[GoogleCalendarEvent]:
     """Events for the user's current day that have not started yet."""
     current = timezone.now()
-    today: date = current.date()
     return GoogleCalendarEvent.objects.filter(
         user=user,
-        start_time__date=today,
         start_time__gt=current,
     )
 

@@ -10,5 +10,5 @@ def create_blocks_in_gcal(user_id: int):
     access_token = GoogleAuthService.get_valid_access_token(user_id)
     gcal = GoogleCalendar(access_token)
     gcal.delete_outdated_events(user)
-    gcal.create_event(user.blocks.all())
+    gcal.create_events(user.blocks.all())
     # create new blocks in gcal for next 2 days (time slot contains what scheduler generated)

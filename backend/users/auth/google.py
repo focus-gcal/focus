@@ -121,7 +121,7 @@ class GoogleAuthService:
         cache.set(redis_key, credentials.access_token, timeout=expires_in)
 
     @staticmethod
-    def refresh_access_token(refresh_token: str) -> str | None:
+    def refresh_access_token(refresh_token: str) -> GoogleCredentials | None:
         try:
             creds = Credentials(
                 token=None,
@@ -133,8 +133,16 @@ class GoogleAuthService:
 
             request = google_requests.Request()
             creds.refresh(request)
+            if creds.expiry and creds.expiry.tzinfo is None:
+                creds.expiry = creds.expiry.replace(tzinfo=timezone.utc)
 
-            return creds.token
+            return GoogleCredentials(
+                id_token=None,
+                access_token=creds.token,
+                refresh_token=creds.refresh_token,
+                expiry=creds.expiry,
+                scopes=creds.scopes if creds.scopes else [],
+            )
         except Exception:
             return None
 
@@ -167,4 +175,4 @@ class GoogleAuthService:
         if not new_access_token:
             return None
         GoogleAuthService.store_access_token(user_id, new_access_token)
-        return new_access_token
+        return new_access_token.access_token
