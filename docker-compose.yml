@@ -55,6 +55,8 @@ services:
         condition: service_healthy
       redis:
         condition: service_started
+      backend:
+        condition: service_started
     command: celery -A focus_gcal worker -l info
 
   # celery_beat:

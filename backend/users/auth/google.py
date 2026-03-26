@@ -3,10 +3,15 @@ from datetime import datetime, timezone
 from typing import List, Optional
 
 import config
+import requests
+from django.contrib.auth import get_user_model
 from django.core.cache import cache
 from google.auth.transport import requests as google_requests
 from google.oauth2 import id_token as google_id_token
+from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import Flow
+
+User = get_user_model()
 
 
 @dataclass
@@ -114,3 +119,60 @@ class GoogleAuthService:
         expires_in = max(expires_in - 60, 0)
 
         cache.set(redis_key, credentials.access_token, timeout=expires_in)
+
+    @staticmethod
+    def refresh_access_token(refresh_token: str) -> GoogleCredentials | None:
+        try:
+            creds = Credentials(
+                token=None,
+                refresh_token=refresh_token,
+                token_uri=GoogleAuthService.token_url,
+                client_id=GoogleAuthService.client_id,
+                client_secret=GoogleAuthService.client_secret,
+            )
+
+            request = google_requests.Request()
+            creds.refresh(request)
+            if creds.expiry and creds.expiry.tzinfo is None:
+                creds.expiry = creds.expiry.replace(tzinfo=timezone.utc)
+
+            return GoogleCredentials(
+                id_token=None,
+                access_token=creds.token,
+                refresh_token=creds.refresh_token,
+                expiry=creds.expiry,
+                scopes=creds.scopes if creds.scopes else [],
+            )
+        except Exception:
+            return None
+
+    @staticmethod
+    def get_access_token(user_id: int):
+        redis_key = f"google_access_token_{user_id}"
+        return cache.get(redis_key)
+
+    @staticmethod
+    def test_access_token(access_token: str) -> bool:
+        try:
+            resp = requests.get(
+                "https://oauth2.googleapis.com/tokeninfo",
+                params={"access_token": access_token},
+                timeout=10,
+            )
+        except Exception:
+            return False
+        return resp.status_code == 200
+
+    @staticmethod
+    def get_valid_access_token(user_id: int):
+        access_token = GoogleAuthService.get_access_token(user_id)
+        if access_token and GoogleAuthService.test_access_token(access_token):
+            return access_token
+        refresh_token = User.objects.get(id=user_id).refresh_token
+        if not refresh_token:
+            return None
+        new_access_token = GoogleAuthService.refresh_access_token(refresh_token)
+        if not new_access_token:
+            return None
+        GoogleAuthService.store_access_token(user_id, new_access_token)
+        return new_access_token.access_token
